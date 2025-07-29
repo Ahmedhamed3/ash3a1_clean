@@ -66,8 +66,9 @@ def main(image_path, seg_weights, landmark_weights):
     mask.save("debug_mask.png")
 
     # Determine crop region and show bbox
+    bbox = mask.getbbox()
+    print("Mask bounding box:", bbox)
     cropped, offset, crop_size = crop_to_mask(image, mask)
-    print(f"Mask bounding box: {offset[0], offset[1], offset[0]+crop_size[0], offset[1]+crop_size[1]}")
 
     # Debug: save cropped region
     cropped.save("debug_cropped.png")
