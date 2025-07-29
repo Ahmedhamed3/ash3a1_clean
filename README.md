@@ -49,3 +49,14 @@ Once you have saved your model outputs in the `predictions/` folder (for example
 python overlay_predictions.py --pred_dir predictions --output_dir overlays
 ```
 The resulting images will be written to `overlays/`.
+
+## Segment then detect landmarks
+Use `segment_then_landmark.py` to first segment the mandible and crop the image
+before running the landmark model:
+
+```bash
+python segment_then_landmark.py path/to/image.jpg \
+    --seg_weights my_model.pth --landmark_weights landmark_model.pth
+```
+The script prints the predicted landmark coordinates relative to the original
+image.
