@@ -24,7 +24,7 @@ def overlay_landmarks(img, preds, targets):
 
 def main(csv_path='dataset/all_19_samples_landmarks_clean.csv',
          img_dir='dataset/xray_images',
-         weights='landmark_model.pth',
+         weights='landmark_model_v2.pth',
          output_dir=None, show=False):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = load_model(weights, device)
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Visualize landmark predictions')
     parser.add_argument('--csv', default='dataset/all_19_samples_landmarks_clean.csv')
     parser.add_argument('--img_dir', default='dataset/xray_images')
-    parser.add_argument('--weights', default='landmark_model.pth')
+    parser.add_argument('--weights', default='landmark_model_v2.pth')
     parser.add_argument('--output_dir', default=None, help='Directory to save annotated images')
     parser.add_argument('--show', action='store_true', help='Display each overlay')
     args = parser.parse_args()

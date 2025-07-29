@@ -105,7 +105,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Segment jaw then predict landmarks")
     parser.add_argument("image", help="Path to input X-ray image")
     parser.add_argument("--seg_weights", default="my_model.pth", help="Path to segmentation weights")
-    parser.add_argument("--landmark_weights", default="landmark_model.pth", help="Path to landmark weights")
+    parser.add_argument("--landmark_weights", default="landmark_model_v2.pth", help="Path to landmark weights")
     args = parser.parse_args()
 
     main(args.image, args.seg_weights, args.landmark_weights)

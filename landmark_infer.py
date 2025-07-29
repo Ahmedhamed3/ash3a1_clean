@@ -37,7 +37,7 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Predict landmarks')
     parser.add_argument('image', help='Path to X-ray image')
-    parser.add_argument('--weights', default='landmark_model.pth')
+    parser.add_argument('--weights', default='landmark_model_v2.pth')
     args = parser.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

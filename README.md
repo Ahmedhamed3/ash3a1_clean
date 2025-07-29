@@ -56,7 +56,7 @@ before running the landmark model:
 
 ```bash
 python segment_then_landmark.py path/to/image.jpg \
-    --seg_weights my_model.pth --landmark_weights landmark_model.pth
+    --seg_weights my_model.pth --landmark_weights landmark_model_v2.pth
 ```
 The script prints the predicted landmark coordinates relative to the original
 image.
