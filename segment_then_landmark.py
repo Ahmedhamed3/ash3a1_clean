@@ -1,5 +1,5 @@
 import argparse
-from PIL import Image
+from PIL import Image, ImageDraw
 import torch
 from torchvision import transforms
 from torchvision.models.segmentation import deeplabv3_resnet50
@@ -62,9 +62,19 @@ def main(image_path, seg_weights, landmark_weights):
     image = Image.open(image_path).convert("RGB")
     w, h = image.size
     mask = segment_jaw(image, seg_model, device)
+    # Debug: save raw segmentation mask
+    mask.save("debug_mask.png")
+
+    # Determine crop region and show bbox
     cropped, offset, crop_size = crop_to_mask(image, mask)
+    print(f"Mask bounding box: {offset[0], offset[1], offset[0]+crop_size[0], offset[1]+crop_size[1]}")
+
+    # Debug: save cropped region
+    cropped.save("debug_cropped.png")
 
     preds = predict_landmarks(cropped, landmark_model, device)
+    print("Normalized landmark predictions:", preds.numpy().tolist())
+
     preds_np = []
     for i, val in enumerate(preds):
         if i % 2 == 0:
@@ -72,10 +82,23 @@ def main(image_path, seg_weights, landmark_weights):
         else:
             coord = -float(val) * crop_size[1] + offset[1]
         preds_np.append(coord)
+    print("Absolute landmark predictions:", preds_np)
 
     names = ["MF_x", "MF_y", "Apex_x", "Apex_y", "IAC_x", "IAC_y", "LBM_90_x", "LBM_90_y"]
     for name, val in zip(names, preds_np):
         print(f"{name}: {val:.2f}")
+
+    # Debug overlay with predicted landmarks
+    overlay = image.convert("RGB").copy()
+    draw = ImageDraw.Draw(overlay)
+    for x, y in zip(preds_np[::2], preds_np[1::2]):
+        x = -x
+        y = -y
+        draw.line((x - 5, y - 5, x + 5, y + 5), fill="red", width=2)
+        draw.line((x - 5, y + 5, x + 5, y - 5), fill="red", width=2)
+    overlay.save("debug_overlay_check.png")
+    # Save a final overlay as well
+    overlay.save("overlay.png")
 
 
 if __name__ == "__main__":
