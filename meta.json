@@ -1,0 +1,14 @@
+{
+    "classes": [
+        {
+            "title": "mandible",
+            "shape": "bitmap",
+            "color": "#8A0F4C",
+            "geometry_config": {},
+            "id": 53055,
+            "hotkey": ""
+        }
+    ],
+    "tags": [],
+    "projectType": "images"
+}
