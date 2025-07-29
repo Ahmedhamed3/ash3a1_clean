@@ -59,4 +59,7 @@ python segment_then_landmark.py path/to/image.jpg \
     --seg_weights my_model.pth --landmark_weights landmark_model.pth
 ```
 The script prints the predicted landmark coordinates relative to the original
-image.
+image and saves an overlay with the landmarks drawn on top. By default the
+overlay is saved under `overlays_1/` with the same filename as the input.
+Pass `--output_dir` to choose another folder and `--show` to display the image
+after saving.
