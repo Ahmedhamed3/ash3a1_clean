@@ -1,5 +1,7 @@
 import argparse
+import os
 from PIL import Image, ImageDraw
+import matplotlib.pyplot as plt
 import torch
 from torchvision import transforms
 from torchvision.models.segmentation import deeplabv3_resnet50
@@ -54,10 +56,12 @@ def predict_landmarks(image, model, device):
     return out
 
 
-def main(image_path, seg_weights, landmark_weights):
+def main(image_path, seg_weights, landmark_weights, output_dir="overlays_1", show=False):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     seg_model = load_segmentation_model(seg_weights, device)
     landmark_model = load_landmark_model(landmark_weights, device)
+
+    os.makedirs(output_dir, exist_ok=True)
 
     image = Image.open(image_path).convert("RGB")
     w, h = image.size
@@ -99,7 +103,13 @@ def main(image_path, seg_weights, landmark_weights):
         draw.line((x - 5, y + 5, x + 5, y - 5), fill="red", width=2)
     overlay.save("debug_overlay_check.png")
     # Save a final overlay as well
-    overlay.save("overlay.png")
+    out_path = os.path.join(output_dir, os.path.basename(image_path))
+    overlay.save(out_path)
+    if show:
+        plt.figure()
+        plt.imshow(overlay)
+        plt.axis("off")
+        plt.show()
 
 
 if __name__ == "__main__":
@@ -107,6 +117,9 @@ if __name__ == "__main__":
     parser.add_argument("image", help="Path to input X-ray image")
     parser.add_argument("--seg_weights", default="my_model.pth", help="Path to segmentation weights")
     parser.add_argument("--landmark_weights", default="landmark_model.pth", help="Path to landmark weights")
+    parser.add_argument("--output_dir", default="overlays_1", help="Directory to save overlay image")
+    parser.add_argument("--show", action="store_true", help="Display overlay image")
     args = parser.parse_args()
 
-    main(args.image, args.seg_weights, args.landmark_weights)
+    main(args.image, args.seg_weights, args.landmark_weights,
+         output_dir=args.output_dir, show=args.show)
